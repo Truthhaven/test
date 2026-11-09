@@ -2861,35 +2861,25 @@ BURST.forEach((b,ci)=>{
   const rot=BIGCOL.slice(ci).concat(BIGCOL.slice(0,ci));
   cards[ci].innerHTML=`<div class="burst"><div class="sm top">${chars(b.top,'t')}</div><div class="big">${chars(b.big,'b',rot)}</div></div>`;
 });
-// The refrain escalates: same burst every time, but each card is a step bigger, bouncier and warmer (k: 0 -> 1),
-// and the last one pays off with a second ripple and a victory wave through LUCKY.
-const BG=[
-  'radial-gradient(85% 85% at 45% 38%,#ffe9cc,#f7cc9a 62%,#e8ad78)',
-  'radial-gradient(85% 85% at 45% 38%,#ffe4c0,#f5c48c 62%,#e3a46c)',
-  'radial-gradient(85% 85% at 45% 38%,#ffdfb4,#f3ba7c 62%,#dd975c)',
-  'radial-gradient(85% 85% at 45% 38%,#ffd9a6,#f0ae6a 62%,#d6884b)',
-  'radial-gradient(70% 75% at 50% 45%,#ffe2a0,#f2a95c 58%,#c9733a)'];
-cards.forEach((c,i)=>c.style.background=BG[i]);
-const springK=(q,k)=>{q=clamp(q);return q>=1?1:1-Math.exp(-(6.5-2.6*k)*q)*Math.cos(q*(9.5+2.5*k))};
+// springy 0 -> 1 with overshoot, the "pop" of the reference
+const spring=q=>{q=clamp(q);return q>=1?1:1-Math.exp(-6*q)*Math.cos(q*9.5)};
 function burstCard(ci,p){
-  const k=ci/4, fin=ci===4;
-  const c=cards[ci], big=c.querySelector('.big'), H=big.offsetHeight+c.offsetWidth*.102;
-  const cr=c.getBoundingClientRect(), cx=c.offsetWidth/2, W=c.offsetWidth*.45;
-  const grow=a=>prog(p,.1+a,.1+a+.32);
-  // big letters rise out of the centre line; the finale adds a victory wave through them
-  c.querySelectorAll('.b').forEach((e,i)=>{const r=e.getBoundingClientRect(), d=Math.abs(r.left+r.width/2-cr.left-cx)/W;
-    const q=grow(d*.1), wave=fin?bump(p,.62+i*.05,.62+i*.05+.16)*c.offsetWidth*.035:0;
-    e.style.transform=`translateY(${-wave}px) scaleY(${Math.max(0.001,springK(q,k)*1.45)}) scaleX(${lerp(.6,1,easeOut(q))})`; e.style.opacity=q>0?1:0});
-  // small letters get shoved up, harder and with more fan on each card; the finale ripples them a second time
-  c.querySelectorAll('.t').forEach(e=>{
-    const r=e.getBoundingClientRect(), x=r.left+r.width/2-cr.left-cx, d=Math.min(1,Math.abs(x)/W);
-    const q=grow(d*.12), h=springK(q,k), v=(springK(q+.04,k)-springK(q-.04,k))/.08;
-    const off=(H/2)*(1-h);
-    const tilt=clamp(-Math.sign(x||1)*v*(4+4*k)*d,-(22+14*k),22+14*k);
-    const lift=-Math.sin(Math.PI*clamp(q))*H*(.12+.1*k)*(1-d);
-    const again=fin?-bump(p,.55+d*.08,.55+d*.08+.2)*H*.14:0;
-    e.style.transform=`translateY(${off+lift+again}px) rotate(${tilt}deg)`});
-  c.querySelector('.burst').style.transform=`scale(${lerp(.86,1.06,k)*(1+(.03+.03*k)*ease(prog(p,.6,1)))})`;
+  const c=cards[ci], big=c.querySelector('.big'), H=big.offsetHeight+c.offsetWidth*.102;   // full gap the big line needs
+  const cx=c.offsetWidth/2, W=c.offsetWidth*.45;
+  const grow=a=>prog(p,.1+a,.1+a+.32);                       // big line grows from p=.10, settles by ~.55
+  // big letters: rise out of the centre line, centre letters first
+  c.querySelectorAll('.b').forEach(e=>{const r=e.getBoundingClientRect(), d=Math.abs(r.left+r.width/2-c.getBoundingClientRect().left-cx)/W;
+    const q=grow(d*.1); e.style.transform=`scaleY(${Math.max(0.001,spring(q)*1.45)}) scaleX(${lerp(.6,1,easeOut(q))})`; e.style.opacity=q>0?1:0});
+  // small letters: start squeezed together at the centre line, get shoved out as the big line grows
+  const push=(sel,dir)=>c.querySelectorAll(sel).forEach(e=>{
+    const r=e.getBoundingClientRect(), x=r.left+r.width/2-c.getBoundingClientRect().left-cx, d=Math.min(1,Math.abs(x)/W);
+    const a=d*.12, q=grow(a), h=spring(q), v=(spring(q+.04)-spring(q-.04))/.08;      // displacement and its speed
+    const off=dir*(H/2)*(1-h);                                                          // 0 at rest, pulled to centre before the burst
+    const tilt=clamp(Math.sign(x||1)*dir*-v*4*d,-22,22);                                               // letters fan out as they're pushed
+    const lift=dir*-Math.sin(Math.PI*clamp(q))*H*.12*(1-d);                              // centre letters get kicked a bit further
+    e.style.transform=`translateY(${off+lift}px) rotate(${tilt}deg)`});
+  push('.t',1); push('.u',-1);
+  big.style.transform=`scale(${1+.03*ease(prog(p,.6,1))})`;
 }
 const CARD=[0,1,2,3,4].map(i=>p=>burstCard(i,p));
 function showCard(t){
