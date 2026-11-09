@@ -47,7 +47,7 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline
 </style>
 
 <div class="wrap">
-  <header><h1>So Lucky</h1><p class="sub">Animatic · 5 scenes · 0:28</p></header>
+  <header><h1>So Lucky</h1><p class="sub">Animatic · 5 scenes · 0:17</p></header>
 
   <div class="screen" id="screen">
     <svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" aria-label="Music video animatic">
@@ -2751,23 +2751,31 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline
 
   <div class="transport">
     <button id="play" aria-label="Play"><svg width="20" height="20" viewBox="0 0 24 24" id="playIcon"><path d="M6 4 L20 12 L6 20 Z" fill="currentColor"/></svg></button>
-    <input id="scrub" type="range" min="0" max="28.4" step="0.01" value="0" aria-label="Timeline">
-    <span class="time" id="time">0:00 / 0:28</span>
+    <input id="scrub" type="range" min="0" max="17" step="0.01" value="0" aria-label="Timeline">
+    <span class="time" id="time">0:00 / 0:17</span>
   </div>
 
   <div class="scenes" id="scenes">
     <button id="sc-0" data-t="0">Breath<small>0:00</small></button>
-    <button id="sc-1" data-t="5.4">Shoes<small>0:05</small></button>
-    <button id="sc-2" data-t="10.8">Home<small>0:10</small></button>
-    <button id="sc-3" data-t="16.2">Water<small>0:16</small></button>
-    <button id="sc-4" data-t="21.6">Eyes<small>0:21</small></button>
+    <button id="sc-1" data-t="4">Shoes<small>0:04</small></button>
+    <button id="sc-2" data-t="8">Home<small>0:08</small></button>
+    <button id="sc-3" data-t="11">Water<small>0:11</small></button>
+    <button id="sc-4" data-t="13.5">Eyes<small>0:13</small></button>
   </div>
   <p class="note">This is a timing draft with no audio. Each lyric line gets a fixed length for now. Once the real track is in, the cuts can land on its beats.</p>
 </div>
 
 <script>
 const $=id=>document.getElementById(id);
-const DUR=28.4;
+const DUR=17;            // length of the video in seconds
+const OLD=28.4;          // scene choreography below is authored on a 28.4 s grid
+// Scene timing: [start, end] on screen for each scene (each includes its "I'm so lucky" line).
+const SCENES=[[0,4],[4,8],[8,11],[11,13.5],[13.5,17]];
+const AUTHORED=[[0,5.4],[5.4,10.8],[10.8,16.2],[16.2,21.6],[21.6,28.4]];
+function warp(tn){       // on-screen time -> authored time, stretching each scene to its new length
+  for(let i=0;i<SCENES.length;i++){const [a,b]=SCENES[i],[c,d]=AUTHORED[i];
+    if(tn<b||i===SCENES.length-1) return c+(d-c)*Math.min(1,Math.max(0,(tn-a)/(b-a)));}
+}
 const LINES=[
   {t0:0,   t1:3.2, text:"Got air in my lungs"},
   {t0:3.2, t1:5.4, text:"I'm so lucky", lucky:1},
@@ -2778,7 +2786,7 @@ const LINES=[
   {t0:16.2,t1:19.4,text:"I got water to drink"},
   {t0:19.4,t1:21.6,text:"I'm so lucky.", lucky:1},
   {t0:21.6,t1:24.8,text:"Got light in my eyes"},
-  {t0:24.8,t1:DUR, text:"I'm so lucky.", lucky:1},
+  {t0:24.8,t1:OLD, text:"I'm so lucky.", lucky:1},
 ];
 const CUTS=[5.4,10.8,16.2,21.6];
 
@@ -2811,7 +2819,8 @@ function camera(cx,cy,h){const s=900/h; world.setAttribute('transform',`translat
 const puffs=[...document.querySelectorAll('.puff')], ss=[...document.querySelectorAll('.ss')];
 function blinkAmt(u,times){let b=0;for(const t of times)b=Math.max(b,bump(u,t,t+.24));return b}
 
-function render(t){
+function render(tn){
+  const t=warp(tn);
   // defaults
   let cam={x:545,y:720,h:1500}, home=0, glass=null, gleam=0, rays=0, flash=0;
   let breath=0, rigTy=0, rigR=0, headR=0, headTy=0, lidL=0, lidR=0, shoeL=0, shoeR=0, sparks=null, puffMode=null, puffP=0;
@@ -2948,9 +2957,9 @@ function render(t){
   // ui
   const si=CUTS.filter(c=>t>=c).length;
   document.querySelectorAll('#scenes button').forEach((b,i)=>b.classList.toggle('active',i===si));
-  $('scrub').value=t;
+  $('scrub').value=tn;
   const f=s=>`0:${String(Math.floor(s)).padStart(2,'0')}`;
-  $('time').textContent=`${f(t)} / ${f(DUR)}`;
+  $('time').textContent=`${f(tn)} / ${f(DUR)}`;
 }
 
 // ---------- player ----------
