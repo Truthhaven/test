@@ -42,8 +42,8 @@ h1{font-family:var(--display);font-weight:800;font-size:1.7rem;margin:0;letter-s
 .burst{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;
   font-family:"Londrina Solid","Arial Rounded MT Bold",system-ui,sans-serif;text-transform:uppercase;line-height:.8}
 .burst .sm,.burst .big{display:flex;align-items:flex-end;white-space:nowrap}
-.burst .sm{font-size:10.5cqw;font-weight:900;color:#3a2016;gap:.05em}
-.burst .big{font-size:17cqw;font-weight:900;margin:4.4cqw 0;gap:.02em}   /* margin leaves room for the 1.45x tall letters */
+.burst .sm{font-size:13cqw;font-weight:900;color:#3a2016;gap:.05em}
+.burst .big{font-size:24cqw;font-weight:900;margin:6.2cqw 0 4cqw;gap:.02em}   /* margin leaves room for the 1.45x tall letters */
 .burst .c{display:inline-block;transform-origin:50% 50%}
 .burst .gap{width:.28em}
 .bigplay{position:absolute;inset:0;display:grid;place-items:center;background:rgba(20,10,5,.25);border:0;cursor:pointer;color:#fff;font:inherit}
@@ -2848,23 +2848,23 @@ const css=(e,tf,op)=>{e.style.transform=tf;if(op!==undefined)e.style.opacity=op}
 // --- "burst" cards: the lyric just sung sits small on two lines; the big lucky line grows out of the gap
 //     between them letter by letter, shoving the small letters up and down in a staggered, tilting ripple.
 const BURST=[
-  {top:'Got air',      big:'I’m so lucky', bot:'in my lungs'},
-  {top:'I got shoes',  big:'I’m so lucky', bot:'on my feet'},
-  {top:'Got a roof',   big:'I’m lucky',    bot:'over my head'},
-  {top:'I got water',  big:'I’m so lucky', bot:'to drink'},
-  {top:'Got light',    big:'I’m so lucky', bot:'in my eyes'},
+  {top:'I’m so', big:'lucky'},
+  {top:'I’m so', big:'lucky'},
+  {top:'I’m',    big:'lucky'},
+  {top:'I’m so', big:'lucky'},
+  {top:'I’m so', big:'lucky'},
 ];
 const BIGCOL=['#8f2f14','#c4561f','#6c84b8','#e07a3c','#3f8f86','#b8481a'];   // deep red-brown, skin orange, denim, glow, teal
 const chars=(txt,cls,col)=>[...txt].map((ch,i)=>ch===' '?'<span class="gap"></span>':
   `<span class="c ${cls}"${col?` style="color:${col[i%col.length]}"`:''}>${ch}</span>`).join('');
 BURST.forEach((b,ci)=>{
   const rot=BIGCOL.slice(ci).concat(BIGCOL.slice(0,ci));
-  cards[ci].innerHTML=`<div class="burst"><div class="sm top">${chars(b.top,'t')}</div><div class="big">${chars(b.big,'b',rot)}</div><div class="sm bot">${chars(b.bot,'u')}</div></div>`;
+  cards[ci].innerHTML=`<div class="burst"><div class="sm top">${chars(b.top,'t')}</div><div class="big">${chars(b.big,'b',rot)}</div></div>`;
 });
 // springy 0 -> 1 with overshoot, the "pop" of the reference
 const spring=q=>{q=clamp(q);return q>=1?1:1-Math.exp(-6*q)*Math.cos(q*9.5)};
 function burstCard(ci,p){
-  const c=cards[ci], big=c.querySelector('.big'), H=big.offsetHeight+2*c.offsetWidth*.044;   // full gap the big line needs
+  const c=cards[ci], big=c.querySelector('.big'), H=big.offsetHeight+c.offsetWidth*.102;   // full gap the big line needs
   const cx=c.offsetWidth/2, W=c.offsetWidth*.45;
   const grow=a=>prog(p,.1+a,.1+a+.32);                       // big line grows from p=.10, settles by ~.55
   // big letters: rise out of the centre line, centre letters first
