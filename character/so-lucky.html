@@ -39,12 +39,13 @@ h1{font-family:var(--display);font-weight:800;font-size:1.7rem;margin:0;letter-s
 .card *{will-change:transform}
 .card::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.45;mix-blend-mode:multiply;
   background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .35  0 0 0 0 .18  0 0 0 0 .08  0 0 0 .5 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E")}
-.words{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:1cqw}
-.line{display:flex;align-items:flex-end;gap:.4cqw}
-.ch{display:inline-block;font-family:"Londrina Solid","Arial Rounded MT Bold",system-ui,sans-serif;text-transform:uppercase;line-height:.82;color:#b8481a}
-.doodle{position:absolute;width:var(--sz);height:var(--sz);margin:calc(var(--sz)/-2) 0 0 calc(var(--sz)/-2)}
-.doodle svg{width:100%;height:100%;overflow:visible;display:block}
-.tag{position:absolute;z-index:2;font:600 2.6cqw/1 var(--body);color:#fff1dc;background:#d8604a;padding:.9cqw 1.8cqw;border-radius:99px;white-space:nowrap}
+.burst{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;
+  font-family:"Londrina Solid","Arial Rounded MT Bold",system-ui,sans-serif;text-transform:uppercase;line-height:.8}
+.burst .sm,.burst .big{display:flex;align-items:flex-end;white-space:nowrap}
+.burst .sm{font-size:10.5cqw;font-weight:900;color:#3a2016;gap:.05em}
+.burst .big{font-size:17cqw;font-weight:900;margin:4.4cqw 0;gap:.02em}   /* margin leaves room for the 1.45x tall letters */
+.burst .c{display:inline-block;transform-origin:50% 50%}
+.burst .gap{width:.28em}
 .bigplay{position:absolute;inset:0;display:grid;place-items:center;background:rgba(20,10,5,.25);border:0;cursor:pointer;color:#fff;font:inherit}
 .bigplay[hidden]{display:none}
 .bigplay span{width:76px;height:76px;border-radius:50%;background:rgba(255,255,255,.92);display:grid;place-items:center;box-shadow:0 6px 20px rgba(0,0,0,.3)}
@@ -2844,88 +2845,43 @@ const back=x=>{x=clamp(x);const c=1.70158;return 1+(c+1)*Math.pow(x-1,3)+c*Math.
 const rnd=i=>{const x=Math.sin(i*127.1+11.3)*43758.5453;return x-Math.floor(x)};
 const css=(e,tf,op)=>{e.style.transform=tf;if(op!==undefined)e.style.opacity=op};
 
-// --- doodles (inline SVG, halftone-dotted fills) ---
-const COL={orange:'#e07a3c',gold:'#f6b443',denim:'#6c84b8',coral:'#d8604a',teal:'#3f8f86',brown:'#3a2016'};
-let pid=0;
-function dots(c){const id='ht'+(pid++);return [`<pattern id="${id}" width="6" height="6" patternUnits="userSpaceOnUse"><rect width="6" height="6" fill="${c}"/><circle cx="3" cy="3" r="1.1" fill="#fff" opacity=".28"/></pattern>`,`url(#${id})`]}
-function starPts(n,ro,ri){let s='';for(let i=0;i<n*2;i++){const a=Math.PI*i/n-Math.PI/2,r=i%2?ri:ro;s+=`${50+r*Math.cos(a)},${50+r*Math.sin(a)} `}return s}
-const SHAPES={
-  squiggle:c=>`<path d="M5 70 C15 30 35 30 30 55 C26 75 45 75 50 50 C55 25 75 30 70 55 C66 72 85 70 95 40" fill="none" stroke="${c}" stroke-width="6" stroke-linecap="round"/>`,
-  star:c=>{const [p,f]=dots(c);return `<defs>${p}</defs><polygon points="${starPts(5,48,20)}" fill="${f}" stroke-linejoin="round"/>`},
-  burst:c=>{const [p,f]=dots(c);return `<defs>${p}</defs><polygon points="${starPts(8,48,30)}" fill="${f}"/>`},
-  smiley:c=>{const [p,f]=dots(c);return `<defs>${p}</defs><polygon points="${starPts(9,49,34)}" fill="${f}"/><circle cx="40" cy="45" r="3.5" fill="${COL.brown}"/><circle cx="60" cy="45" r="3.5" fill="${COL.brown}"/><path d="M36 57 Q50 70 64 57" fill="none" stroke="${COL.brown}" stroke-width="4" stroke-linecap="round"/>`},
-  sleepy:c=>{const [p,f]=dots(c);return `<defs>${p}</defs><path d="M50 6 C62 22 78 10 82 28 C96 34 90 52 94 62 C84 74 74 70 70 88 C56 92 48 80 34 92 C26 80 10 84 10 66 C2 56 14 44 8 32 C22 26 26 10 50 6 Z" fill="${f}"/><path d="M34 46 h12 M56 46 h12" stroke="${COL.brown}" stroke-width="4" stroke-linecap="round"/><path d="M36 60 q5 -5 10 0 q5 5 10 0 q5 -5 10 0" fill="none" stroke="${COL.brown}" stroke-width="3.5" stroke-linecap="round"/>`},
-  tri:c=>{const [p,f]=dots(c);return `<defs>${p}</defs><polygon points="50,6 96,90 4,90" fill="${f}" stroke="${c}" stroke-width="4" stroke-linejoin="round"/>`},
-  diamond:c=>{const [p,f]=dots(c);return `<defs>${p}</defs><polygon points="50,4 92,50 50,96 8,50" fill="${f}"/>`},
-  dot:c=>`<circle cx="50" cy="50" r="44" fill="${c}"/>`,
-};
-// slots around the edges, clear of the words in the middle: [x%, y%]
-const SLOTS=[[9,16],[30,9],[52,7],[73,11],[91,18],[6,50],[94,48],[10,84],[29,90],[50,93],[71,89],[90,82],[7,33],[93,32],[7,67],[93,66]];
-const KINDS=['squiggle','star','smiley','tri','burst','dot','squiggle','diamond','star','dot','sleepy','squiggle','dot','tri','star','burst'];
-const PAL=[COL.denim,COL.orange,COL.coral,COL.teal,COL.gold,COL.gold,COL.denim,COL.teal,COL.orange,COL.coral,COL.coral,COL.denim,COL.gold,COL.gold,COL.orange,COL.coral];
-
-// --- the five cards ---
-const SPEC=[
-  {lines:['I’m so','lucky'], tags:[['breathe',70,28]], seed:1},
-  {lines:['I’m so','lucky'], tags:[['two feet',22,70]], seed:2},
-  {lines:['I’m','lucky'],    tags:[['home',74,72]], seed:3},
-  {lines:['I’m so','lucky'], tags:[['hydrated',24,30]], seed:4},
-  {lines:['I’m so','lucky!'],tags:[['grateful',72,27],['shine',26,74]], seed:5},
+// --- "burst" cards: the lyric just sung sits small on two lines; the big lucky line grows out of the gap
+//     between them letter by letter, shoving the small letters up and down in a staggered, tilting ripple.
+const BURST=[
+  {top:'Got air',      big:'I’m so lucky', bot:'in my lungs'},
+  {top:'I got shoes',  big:'I’m so lucky', bot:'on my feet'},
+  {top:'Got a roof',   big:'I’m lucky',    bot:'over my head'},
+  {top:'I got water',  big:'I’m so lucky', bot:'to drink'},
+  {top:'Got light',    big:'I’m so lucky', bot:'in my eyes'},
 ];
-const SIZE=[13,26];   // cqw for line 1 and line 2
-SPEC.forEach((sp,ci)=>{
-  const c=cards[ci]; let h='';
-  SLOTS.forEach((pos,k)=>{const kind=KINDS[(k+ci*5)%KINDS.length], col=PAL[(k*3+ci*2)%PAL.length], sz=(kind==='dot'?3:kind==='smiley'||kind==='sleepy'?11:kind==='squiggle'?11:7)+rnd(k+ci*31)*3;
-    h+=`<div class="doodle" data-k="${k}" style="left:${pos[0]+(rnd(k*7+ci)-.5)*3}%;top:${pos[1]+(rnd(k*5+ci)-.5)*4}%;--sz:${sz}cqw"><svg viewBox="0 0 100 100">${SHAPES[kind](col)}</svg></div>`});
-  h+='<div class="words">'; let n=0;
-  sp.lines.forEach((ln,li)=>{h+='<div class="line">';
-    [...ln].forEach(ch=>{ if(ch===' '){h+='<span style="width:3cqw"></span>';return}
-      const r=rnd(ci*97+n*13), sz=SIZE[li]*(.82+rnd(n*3+ci)*.36), rot=(rnd(n*5+ci*3)-.5)*14, y=(rnd(n*11+ci)-.5)*SIZE[li]*.14, w=rnd(n*17+ci)>.3?900:400;
-      h+=`<span class="ch" data-i="${n}" data-rot="${rot.toFixed(1)}" data-y="${y.toFixed(2)}" style="font-size:${sz.toFixed(2)}cqw;font-weight:${w}">${ch}</span>`; n++});
-    h+='</div>'});
-  h+='</div>';
-  sp.tags.forEach(([t,x,y],k)=>h+=`<div class="tag" data-k="${k}" style="left:${x}%;top:${y}%">${t}</div>`);
-  c.innerHTML=h;
+const BIGCOL=['#8f2f14','#c4561f','#6c84b8','#e07a3c','#3f8f86','#b8481a'];   // deep red-brown, skin orange, denim, glow, teal
+const chars=(txt,cls,col)=>[...txt].map((ch,i)=>ch===' '?'<span class="gap"></span>':
+  `<span class="c ${cls}"${col?` style="color:${col[i%col.length]}"`:''}>${ch}</span>`).join('');
+BURST.forEach((b,ci)=>{
+  const rot=BIGCOL.slice(ci).concat(BIGCOL.slice(0,ci));
+  cards[ci].innerHTML=`<div class="burst"><div class="sm top">${chars(b.top,'t')}</div><div class="big">${chars(b.big,'b',rot)}</div><div class="sm bot">${chars(b.bot,'u')}</div></div>`;
 });
-function doodles(c,p,u,start=.05,step=.035){
-  c.querySelectorAll('.doodle').forEach(d=>{const k=+d.dataset.k, q=prog(p,start+k*step,start+k*step+.14);
-    css(d,`translateY(${Math.sin(u*2.4+k)*.6}cqw) rotate(${Math.sin(u*1.8+k*2)*10+(1-q)*-90}deg) scale(${back(q)})`,q>0?1:0)});
+// springy 0 -> 1 with overshoot, the "pop" of the reference
+const spring=q=>{q=clamp(q);return q>=1?1:1-Math.exp(-6*q)*Math.cos(q*9.5)};
+function burstCard(ci,p){
+  const c=cards[ci], big=c.querySelector('.big'), H=big.offsetHeight+2*c.offsetWidth*.044;   // full gap the big line needs
+  const cx=c.offsetWidth/2, W=c.offsetWidth*.45;
+  const grow=a=>prog(p,.1+a,.1+a+.32);                       // big line grows from p=.10, settles by ~.55
+  // big letters: rise out of the centre line, centre letters first
+  c.querySelectorAll('.b').forEach(e=>{const r=e.getBoundingClientRect(), d=Math.abs(r.left+r.width/2-c.getBoundingClientRect().left-cx)/W;
+    const q=grow(d*.1); e.style.transform=`scaleY(${Math.max(0.001,spring(q)*1.45)}) scaleX(${lerp(.6,1,easeOut(q))})`; e.style.opacity=q>0?1:0});
+  // small letters: start squeezed together at the centre line, get shoved out as the big line grows
+  const push=(sel,dir)=>c.querySelectorAll(sel).forEach(e=>{
+    const r=e.getBoundingClientRect(), x=r.left+r.width/2-c.getBoundingClientRect().left-cx, d=Math.min(1,Math.abs(x)/W);
+    const a=d*.12, q=grow(a), h=spring(q), v=(spring(q+.04)-spring(q-.04))/.08;      // displacement and its speed
+    const off=dir*(H/2)*(1-h);                                                          // 0 at rest, pulled to centre before the burst
+    const tilt=clamp(Math.sign(x||1)*dir*-v*4*d,-22,22);                                               // letters fan out as they're pushed
+    const lift=dir*-Math.sin(Math.PI*clamp(q))*H*.12*(1-d);                              // centre letters get kicked a bit further
+    e.style.transform=`translateY(${off+lift}px) rotate(${tilt}deg)`});
+  push('.t',1); push('.u',-1);
+  big.style.transform=`scale(${1+.03*ease(prog(p,.6,1))})`;
 }
-function tags(c,p,at){c.querySelectorAll('.tag').forEach(t=>{const q=prog(p,at+(+t.dataset.k)*.1,at+(+t.dataset.k)*.1+.14);
-  css(t,`rotate(${-8+16*rnd(+t.dataset.k+7)}deg) scale(${back(q)})`,q>0?1:0)})}
-const letters=c=>[...c.querySelectorAll('.ch')];
-const rest=e=>`translateY(${e.dataset.y}cqw) rotate(${e.dataset.rot}deg)`;
-
-const CARD=[
-  // 1. SLAM: words smash down from huge, screen shakes, doodles pop out on the impact
-  (p,u)=>{const c=cards[0], L=letters(c), lands=[.04,.04,.04,.18,.18,.36,.36,.36,.36,.36]; let shake=0;
-    L.forEach((e,i)=>{const a=i<3?.04:i<5?.18:.36, q=prog(p,a,a+.09); css(e,`${rest(e)} scale(${q<=0?3:lerp(3,1,back(q))})`,q>0?1:0);
-      if(p>a+.09)shake=Math.max(shake,1-prog(p,a+.09,a+.3))});
-    css(c.querySelector('.words'),`translate(${(rnd(p*91)-.5)*shake*2}cqw,${(rnd(p*53)-.5)*shake*2}cqw)`);
-    doodles(c,p,u,.38,.02); tags(c,p,.6);},
-  // 2. DROP: letters fall in one by one and bounce on their baselines
-  (p,u)=>{const c=cards[1];
-    letters(c).forEach((e,i)=>{const a=.04+i*.05, q=prog(p,a,a+.22);
-      const fall=q<.55?lerp(-70,0,(q/.55)**2):-10*Math.abs(Math.sin((q-.55)/.45*Math.PI*2))*(1-q);
-      css(e,`translateY(${(+e.dataset.y)+fall}cqw) rotate(${e.dataset.rot}deg) scaleY(${q>.5&&q<.62?.8:1})`,q>0?1:0)});
-    doodles(c,p,u,.1,.03); tags(c,p,.65);},
-  // 3. POP: each letter springs out of nothing with a spin, then they all bob
-  (p,u)=>{const c=cards[2];
-    letters(c).forEach((e,i)=>{const a=.06+i*.07, q=prog(p,a,a+.16);
-      css(e,`translateY(${(+e.dataset.y)+Math.sin(u*7+i)*.8*prog(p,.6,.75)}cqw) rotate(${lerp(-160,+e.dataset.rot,easeOut(q))}deg) scale(${back(q)})`,q>0?1:0)});
-    doodles(c,p,u,.05,.035); tags(c,p,.6);},
-  // 4. JELLY: the words squash in flat, then wobble like jelly until they settle
-  (p,u)=>{const c=cards[3], q=prog(p,.05,.3), t=prog(p,.3,1);
-    const wob=Math.sin(t*Math.PI*6)*Math.exp(-t*4)*.35;
-    css(c.querySelector('.words'),`scale(${lerp(2.2,1,easeOut(q))*(1+wob)},${lerp(.05,1,easeOut(q))*(1-wob)})`,q>0?1:0);
-    letters(c).forEach(e=>css(e,rest(e)));
-    doodles(c,p,u,.2,.025); tags(c,p,.55);},
-  // 5. ASSEMBLE: letters fly in from every direction, lock together, doodles burst out and keep dancing
-  (p,u)=>{const c=cards[4];
-    letters(c).forEach((e,i)=>{const a=.03+i*.03, q=easeOut(prog(p,a,a+.3)), ang=rnd(i+40)*Math.PI*2;
-      css(e,`translate(${Math.cos(ang)*60*(1-q)}cqw,${Math.sin(ang)*40*(1-q)+(+e.dataset.y)+Math.sin(u*5+i)*.7*prog(p,.6,.7)}cqw) rotate(${lerp(rnd(i+9)*360-180,+e.dataset.rot,q)}deg)`,q>0?1:0)});
-    doodles(c,p,u,.4,.015); tags(c,p,.62);},
-];
+const CARD=[0,1,2,3,4].map(i=>p=>burstCard(i,p));
 function showCard(t){
   let on=-1;
   LUCKY.forEach(([a,b],i)=>{if(t>=a&&(t<b||(i===4&&t>=b)))on=i});
