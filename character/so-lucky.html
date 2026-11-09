@@ -1,7 +1,7 @@
 <title>So Lucky</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,500..800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Londrina+Solid:wght@400;900&family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,500..800&display=swap">
 <style>
 /* Layout: a 16:9 screen with lyric captions on it, transport controls and a scene strip below */
 :root{
@@ -29,49 +29,22 @@ h1{font-family:var(--display);font-weight:800;font-size:1.7rem;margin:0;letter-s
 .caption.lucky span{color:rgba(255,214,140,.5)}
 .caption.lucky span.on{color:#ffd27a}
 /* ---------- full-screen "lucky" type cards ----------
-   Palette and lighting are lifted from the character art: burnt-orange skin, golden rim light from the left,
-   deep brown hair/shirt, cream sneakers, muted denim blue. Letters are cel-lit like her: gold rim on the left edge,
-   hard brown shadow to the right. A grain + vignette layer keeps the cards feeling painted. */
+   Whimsical hand-cut lettering on the same warm peach as her scenes. Every letter gets its own size, tilt, baseline
+   and weight; doodles (squiggles, stars, smiley bursts, triangles, dots) carry a halftone dot texture.
+   Colours come from her art: burnt orange, rim gold, deep brown, denim blue, coral, and the couch teal. */
 .screen{container-type:inline-size}
-.card{--rim:#ffc35a;--shade:#3b1a0c;position:absolute;inset:0;overflow:hidden;z-index:2;display:grid;place-items:center;
-  text-transform:uppercase;line-height:.84;font-family:var(--display);font-weight:800;font-stretch:78%;letter-spacing:-.01em}
+.card{position:absolute;inset:0;overflow:hidden;z-index:2;display:grid;place-items:center;
+  background:radial-gradient(85% 85% at 45% 38%,#ffe6c4,#f5c690 62%,#e3a46c)}
 .card[hidden]{display:none}
 .card *{will-change:transform}
-.card::after{content:"";position:absolute;inset:0;pointer-events:none;
-  background:radial-gradient(120% 90% at 50% 45%,transparent 55%,rgba(40,14,4,.45)),
-  url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .2  0 0 0 0 .1  0 0 0 0 .05  0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
-  mix-blend-mode:multiply;opacity:.55}
-.lit{text-shadow:-.45cqw -.15cqw 0 var(--rim),.9cqw .9cqw 0 var(--shade)}
-/* 1. slam: warm sunlit orange, like her skin in the key light */
-#card0{background:radial-gradient(90% 90% at 30% 30%,#ee8a3e,#c4561f 60%,#8f3a17);color:#fff1dc}
-#card0 .stack{display:flex;flex-direction:column;align-items:center;gap:1.5cqw}
-#card0 .row{display:flex;gap:3cqw}
-#card0 .w{display:inline-block}
-#card0 .a{font-size:16cqw}#card0 .b{font-size:29cqw}
-/* 2. ticker: deep brown of her shirt and locs, a denim band, cream headline */
-#card1{background:radial-gradient(80% 90% at 25% 30%,#3a2016,#1d120e 70%);--shade:#1d120e}
-#card1 .tick{position:absolute;left:-40cqw;white-space:nowrap;font-size:10cqw;color:transparent;-webkit-text-stroke:.22cqw rgba(246,167,67,.42)}
-#card1 .band{position:absolute;left:-10%;right:-10%;height:25cqw;background:linear-gradient(180deg,#c9c3ba,#a2a3a8 55%,#8e8c90);
-  transform-origin:left center;box-shadow:0 1cqw 0 #1d120e}
-#card1 .head{position:relative;font-size:18cqw;color:#fff1dc;white-space:nowrap}
-#card1 .head.lit{text-shadow:-.45cqw -.15cqw 0 var(--rim),.9cqw .9cqw 0 #c4561f,1.6cqw 1.6cqw 0 #1d120e}
-/* 3. pop: cream paper, each letter in a colour from her palette */
-#card2{background:radial-gradient(90% 90% at 35% 30%,#fff6e8,#f6dfc0);--shade:#3a2016}
-#card2 .im{position:absolute;top:10%;font-size:10cqw;color:#3a2016;letter-spacing:.03em}
-#card2 .word{display:flex;margin-top:6cqw}
-#card2 .l{display:inline-block;font-size:25cqw;font-stretch:90%}
-/* 4. echo: muted denim blue, the cool complement to her warm light */
-#card3{background:radial-gradient(90% 90% at 30% 30%,#a9b7c4,#7d8fa1 60%,#5d6d7e);color:#fff1dc;--shade:#2c3440}
-#card3 .top{position:absolute;top:8%;font-size:14cqw}
-#card3 .lk{position:absolute;top:37%;font-size:29cqw}
-#card3 .echo{color:transparent;-webkit-text-stroke:.3cqw #fff1dc;text-shadow:none}
-/* 5. finale: gold glow out of deep brown, like the rim light on her hair */
-#card4{background:radial-gradient(60% 70% at 50% 58%,#4a2a14,#1d120e 75%)}
-#card4 .type{position:absolute;top:13%;font-size:8cqw;letter-spacing:.22em;color:#fff1dc;font-stretch:100%}
-#card4 .gold{position:absolute;top:33%;font-size:30cqw;background:linear-gradient(180deg,#fff2c8,#f6a743 55%,#c4561f);
-  -webkit-background-clip:text;background-clip:text;color:transparent}
-#card4 .spark{position:absolute;left:50%;top:58%;font-size:5cqw;color:#ffd27a;font-family:var(--body)}
-#card4 .ring{position:absolute;left:50%;top:58%;width:20cqw;height:20cqw;margin:-10cqw 0 0 -10cqw;border:.5cqw solid #f6a743;border-radius:50%}
+.card::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.45;mix-blend-mode:multiply;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .35  0 0 0 0 .18  0 0 0 0 .08  0 0 0 .5 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E")}
+.words{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:1cqw}
+.line{display:flex;align-items:flex-end;gap:.4cqw}
+.ch{display:inline-block;font-family:"Londrina Solid","Arial Rounded MT Bold",system-ui,sans-serif;text-transform:uppercase;line-height:.82;color:#b8481a}
+.doodle{position:absolute;width:var(--sz);height:var(--sz);margin:calc(var(--sz)/-2) 0 0 calc(var(--sz)/-2)}
+.doodle svg{width:100%;height:100%;overflow:visible;display:block}
+.tag{position:absolute;z-index:2;font:600 2.6cqw/1 var(--body);color:#fff1dc;background:#d8604a;padding:.9cqw 1.8cqw;border-radius:99px;white-space:nowrap}
 .bigplay{position:absolute;inset:0;display:grid;place-items:center;background:rgba(20,10,5,.25);border:0;cursor:pointer;color:#fff;font:inherit}
 .bigplay[hidden]{display:none}
 .bigplay span{width:76px;height:76px;border-radius:50%;background:rgba(255,255,255,.92);display:grid;place-items:center;box-shadow:0 6px 20px rgba(0,0,0,.3)}
@@ -2790,11 +2763,11 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline
       <rect id="flash" x="0" y="0" width="1600" height="900" fill="#fff" opacity="0" pointer-events="none"/>
     </svg>
     <div class="caption" id="caption" aria-live="polite"></div>
-    <div class="card" id="card0" hidden><div class="stack"><div class="row"><span class="w a lit">I’m</span><span class="w a lit">so</span></div><div class="row"><span class="w b lit">lucky</span></div></div></div>
-    <div class="card" id="card1" hidden><div class="band"></div><div class="head lit">I’m so lucky</div></div>
-    <div class="card" id="card2" hidden><div class="im">I’m</div><div class="word"></div></div>
-    <div class="card" id="card3" hidden><div class="top lit">I’m so</div></div>
-    <div class="card" id="card4" hidden><div class="type"></div><div class="gold">Lucky</div></div>
+    <div class="card" id="card0" hidden></div>
+    <div class="card" id="card1" hidden></div>
+    <div class="card" id="card2" hidden></div>
+    <div class="card" id="card3" hidden></div>
+    <div class="card" id="card4" hidden></div>
     <button class="bigplay" id="bigplay" aria-label="Play"><span><svg viewBox="0 0 24 24"><path d="M6 4 L20 12 L6 20 Z" fill="#c4561f"/></svg></span></button>
   </div>
 
@@ -2868,68 +2841,97 @@ function camera(cx,cy,h){const s=900/h; world.setAttribute('transform',`translat
 const LUCKY=[[3.2,5.4],[8.6,10.8],[14,16.2],[19.4,21.6],[24.8,28.4]];   // authored time ranges
 const cards=[0,1,2,3,4].map(i=>$('card'+i));
 const back=x=>{x=clamp(x);const c=1.70158;return 1+(c+1)*Math.pow(x-1,3)+c*Math.pow(x-1,2)};
-const rnd=i=>{const x=Math.sin(i*127.1)*43758.5453;return x-Math.floor(x)};
+const rnd=i=>{const x=Math.sin(i*127.1+11.3)*43758.5453;return x-Math.floor(x)};
 const css=(e,tf,op)=>{e.style.transform=tf;if(op!==undefined)e.style.opacity=op};
-// build repeated pieces once
-(function(){
-  const c1=$('card1'); for(let r=0;r<6;r++){const d=document.createElement('div');d.className='tick';d.style.top=(r*10.5-3)+'cqw';
-    d.textContent=Array(8).fill('So lucky ✦').join(' ');c1.insertBefore(d,c1.firstChild)}
-  const cols=['#c4561f','#f6a743','#7d8fa1','#3a2016','#e07a3c','#c4561f'];   // skin, rim gold, denim, hair, glow
-  $('card2').querySelector('.word').innerHTML=[...'Lucky.'].map((ch,i)=>`<span class="l lit" style="color:${cols[i]}">${ch}</span>`).join('');
-  const c3=$('card3');
-  for(let k=4;k>=0;k--){const d=document.createElement('div');d.className='lk '+(k?'echo':'solid lit');d.dataset.k=k;d.textContent='Lucky';c3.appendChild(d)}
-  const c4=$('card4');
-  for(let k=0;k<3;k++){const r=document.createElement('div');r.className='ring';c4.insertBefore(r,c4.firstChild)}
-  for(let k=0;k<16;k++){const sp=document.createElement('div');sp.className='spark';sp.textContent='✦';c4.appendChild(sp)}
-})();
+
+// --- doodles (inline SVG, halftone-dotted fills) ---
+const COL={orange:'#e07a3c',gold:'#f6b443',denim:'#6c84b8',coral:'#d8604a',teal:'#3f8f86',brown:'#3a2016'};
+let pid=0;
+function dots(c){const id='ht'+(pid++);return [`<pattern id="${id}" width="6" height="6" patternUnits="userSpaceOnUse"><rect width="6" height="6" fill="${c}"/><circle cx="3" cy="3" r="1.1" fill="#fff" opacity=".28"/></pattern>`,`url(#${id})`]}
+function starPts(n,ro,ri){let s='';for(let i=0;i<n*2;i++){const a=Math.PI*i/n-Math.PI/2,r=i%2?ri:ro;s+=`${50+r*Math.cos(a)},${50+r*Math.sin(a)} `}return s}
+const SHAPES={
+  squiggle:c=>`<path d="M5 70 C15 30 35 30 30 55 C26 75 45 75 50 50 C55 25 75 30 70 55 C66 72 85 70 95 40" fill="none" stroke="${c}" stroke-width="6" stroke-linecap="round"/>`,
+  star:c=>{const [p,f]=dots(c);return `<defs>${p}</defs><polygon points="${starPts(5,48,20)}" fill="${f}" stroke-linejoin="round"/>`},
+  burst:c=>{const [p,f]=dots(c);return `<defs>${p}</defs><polygon points="${starPts(8,48,30)}" fill="${f}"/>`},
+  smiley:c=>{const [p,f]=dots(c);return `<defs>${p}</defs><polygon points="${starPts(9,49,34)}" fill="${f}"/><circle cx="40" cy="45" r="3.5" fill="${COL.brown}"/><circle cx="60" cy="45" r="3.5" fill="${COL.brown}"/><path d="M36 57 Q50 70 64 57" fill="none" stroke="${COL.brown}" stroke-width="4" stroke-linecap="round"/>`},
+  sleepy:c=>{const [p,f]=dots(c);return `<defs>${p}</defs><path d="M50 6 C62 22 78 10 82 28 C96 34 90 52 94 62 C84 74 74 70 70 88 C56 92 48 80 34 92 C26 80 10 84 10 66 C2 56 14 44 8 32 C22 26 26 10 50 6 Z" fill="${f}"/><path d="M34 46 h12 M56 46 h12" stroke="${COL.brown}" stroke-width="4" stroke-linecap="round"/><path d="M36 60 q5 -5 10 0 q5 5 10 0 q5 -5 10 0" fill="none" stroke="${COL.brown}" stroke-width="3.5" stroke-linecap="round"/>`},
+  tri:c=>{const [p,f]=dots(c);return `<defs>${p}</defs><polygon points="50,6 96,90 4,90" fill="${f}" stroke="${c}" stroke-width="4" stroke-linejoin="round"/>`},
+  diamond:c=>{const [p,f]=dots(c);return `<defs>${p}</defs><polygon points="50,4 92,50 50,96 8,50" fill="${f}"/>`},
+  dot:c=>`<circle cx="50" cy="50" r="44" fill="${c}"/>`,
+};
+// slots around the edges, clear of the words in the middle: [x%, y%]
+const SLOTS=[[9,16],[30,9],[52,7],[73,11],[91,18],[6,50],[94,48],[10,84],[29,90],[50,93],[71,89],[90,82],[7,33],[93,32],[7,67],[93,66]];
+const KINDS=['squiggle','star','smiley','tri','burst','dot','squiggle','diamond','star','dot','sleepy','squiggle','dot','tri','star','burst'];
+const PAL=[COL.denim,COL.orange,COL.coral,COL.teal,COL.gold,COL.gold,COL.denim,COL.teal,COL.orange,COL.coral,COL.coral,COL.denim,COL.gold,COL.gold,COL.orange,COL.coral];
+
+// --- the five cards ---
+const SPEC=[
+  {lines:['I’m so','lucky'], tags:[['breathe',70,28]], seed:1},
+  {lines:['I’m so','lucky'], tags:[['two feet',22,70]], seed:2},
+  {lines:['I’m','lucky'],    tags:[['home',74,72]], seed:3},
+  {lines:['I’m so','lucky'], tags:[['hydrated',24,30]], seed:4},
+  {lines:['I’m so','lucky!'],tags:[['grateful',72,27],['shine',26,74]], seed:5},
+];
+const SIZE=[13,26];   // cqw for line 1 and line 2
+SPEC.forEach((sp,ci)=>{
+  const c=cards[ci]; let h='';
+  SLOTS.forEach((pos,k)=>{const kind=KINDS[(k+ci*5)%KINDS.length], col=PAL[(k*3+ci*2)%PAL.length], sz=(kind==='dot'?3:kind==='smiley'||kind==='sleepy'?11:kind==='squiggle'?11:7)+rnd(k+ci*31)*3;
+    h+=`<div class="doodle" data-k="${k}" style="left:${pos[0]+(rnd(k*7+ci)-.5)*3}%;top:${pos[1]+(rnd(k*5+ci)-.5)*4}%;--sz:${sz}cqw"><svg viewBox="0 0 100 100">${SHAPES[kind](col)}</svg></div>`});
+  h+='<div class="words">'; let n=0;
+  sp.lines.forEach((ln,li)=>{h+='<div class="line">';
+    [...ln].forEach(ch=>{ if(ch===' '){h+='<span style="width:3cqw"></span>';return}
+      const r=rnd(ci*97+n*13), sz=SIZE[li]*(.82+rnd(n*3+ci)*.36), rot=(rnd(n*5+ci*3)-.5)*14, y=(rnd(n*11+ci)-.5)*SIZE[li]*.14, w=rnd(n*17+ci)>.3?900:400;
+      h+=`<span class="ch" data-i="${n}" data-rot="${rot.toFixed(1)}" data-y="${y.toFixed(2)}" style="font-size:${sz.toFixed(2)}cqw;font-weight:${w}">${ch}</span>`; n++});
+    h+='</div>'});
+  h+='</div>';
+  sp.tags.forEach(([t,x,y],k)=>h+=`<div class="tag" data-k="${k}" style="left:${x}%;top:${y}%">${t}</div>`);
+  c.innerHTML=h;
+});
+function doodles(c,p,u,start=.05,step=.035){
+  c.querySelectorAll('.doodle').forEach(d=>{const k=+d.dataset.k, q=prog(p,start+k*step,start+k*step+.14);
+    css(d,`translateY(${Math.sin(u*2.4+k)*.6}cqw) rotate(${Math.sin(u*1.8+k*2)*10+(1-q)*-90}deg) scale(${back(q)})`,q>0?1:0)});
+}
+function tags(c,p,at){c.querySelectorAll('.tag').forEach(t=>{const q=prog(p,at+(+t.dataset.k)*.1,at+(+t.dataset.k)*.1+.14);
+  css(t,`rotate(${-8+16*rnd(+t.dataset.k+7)}deg) scale(${back(q)})`,q>0?1:0)})}
+const letters=c=>[...c.querySelectorAll('.ch')];
+const rest=e=>`translateY(${e.dataset.y}cqw) rotate(${e.dataset.rot}deg)`;
+
 const CARD=[
-  // 1. SLAM: words smash in, screen shakes on impact, then a slow push
-  (p)=>{
-    const w=$('card0').querySelectorAll('.w'), lands=[.04,.2,.4]; let shake=0;
-    w.forEach((e,i)=>{const q=prog(p,lands[i],lands[i]+.1);
-      css(e,`scale(${q<=0?3:lerp(3.2,1,back(q))}) rotate(${(1-q)*(i%2?8:-8)}deg)`,q>0?1:0);
-      shake=Math.max(shake,1-prog(p,lands[i]+.1,lands[i]+.28))*(p>lands[i]+.1?1:0)});
-    const a=shake*1.6;
-    css($('card0').querySelector('.stack'),`translate(${(rnd(p*99)-.5)*a}cqw,${(rnd(p*77)-.5)*a}cqw) scale(${1+.04*ease(prog(p,.55,1))})`);
-  },
-  // 2. TICKER: outline rows scroll both ways, black band snaps open, headline whips in
-  (p)=>{
-    $('card1').querySelectorAll('.tick').forEach((e,i)=>css(e,`translateX(${(i%2?-1:1)*p*35-(i%2?0:20)}cqw)`));
-    css($('card1').querySelector('.band'),`rotate(-6deg) scaleX(${easeOut(prog(p,0,.14))})`);
-    const q=prog(p,.08,.3);
-    css($('card1').querySelector('.head'),`translateX(${lerp(-120,0,back(q))}cqw) rotate(-6deg) skewX(${(1-easeOut(q))*-25}deg) scale(${1+.05*ease(prog(p,.5,1))})`,q>0?1:0);
-  },
-  // 3. POP: each letter bounces in, its own color and tilt, then they bob
-  (p,u)=>{
-    css($('card2').querySelector('.im'),`translateY(${(1-easeOut(prog(p,0,.12)))*-8}cqw)`,prog(p,0,.1));
-    $('card2').querySelectorAll('.l').forEach((e,i)=>{const q=prog(p,.1+i*.07,.1+i*.07+.16), r0=(rnd(i+3)-.5)*50, r1=(rnd(i+9)-.5)*14;
-      css(e,`translateY(${Math.sin(u*7+i)*1.2*prog(p,.6,.8)}cqw) scale(${back(q)}) rotate(${lerp(r0,r1,easeOut(q))}deg)`,q>0?1:0)});
-  },
-  // 4. ECHO: top line drops in, LUCKY rises and leaves a trail of outlines
-  (p)=>{
-    css($('card3').querySelector('.top'),`translateY(${(1-easeOut(prog(p,0,.18)))*-30}cqw)`);
-    const q=easeOut(prog(p,.12,.34));
-    $('card3').querySelectorAll('.lk').forEach(e=>{const k=+e.dataset.k, sp=lerp(0,3.2,ease(prog(p,.3,.75)));
-      css(e,`translateY(${lerp(60,0,q)+k*sp}cqw)`,k?Math.max(0,.9-k*.17)*prog(p,.3,.45):1)});
-  },
-  // 5. FINALE: type-on, gold zoom out of a blur, sparkle burst + rings, gentle pulse
-  (p,u)=>{
-    const txt='I’m so', n=Math.floor(clamp(p/.22)*txt.length+.001);
-    $('card4').querySelector('.type').textContent=txt.slice(0,n);
-    const q=prog(p,.22,.42), g=$('card4').querySelector('.gold');
-    css(g,`scale(${lerp(.15,1,back(q))*(1+.03*Math.sin(u*6)*prog(p,.5,.6))})`,q>0?1:0);
-    g.style.filter=`blur(${(1-q)*2}cqw) drop-shadow(0 0 ${2+1.5*Math.sin(u*5)}cqw rgba(255,190,60,.55))`;
-    $('card4').querySelectorAll('.spark').forEach((e,i)=>{const b=prog(p,.38,.85), a=i/16*Math.PI*2+rnd(i)*.3, r=easeOut(b)*(30+rnd(i+5)*18);
-      css(e,`translate(-50%,-50%) translate(${Math.cos(a)*r}cqw,${Math.sin(a)*r*.6}cqw) rotate(${b*180}deg) scale(${1-b*.4})`,b>0?1-b:0)});
-    $('card4').querySelectorAll('.ring').forEach((e,i)=>{const b=prog(p,.4+i*.08,.8+i*.08);css(e,`scale(${lerp(.2,6,easeOut(b))})`,b>0&&b<1?1-b:0)});
-  },
+  // 1. SLAM: words smash down from huge, screen shakes, doodles pop out on the impact
+  (p,u)=>{const c=cards[0], L=letters(c), lands=[.04,.04,.04,.18,.18,.36,.36,.36,.36,.36]; let shake=0;
+    L.forEach((e,i)=>{const a=i<3?.04:i<5?.18:.36, q=prog(p,a,a+.09); css(e,`${rest(e)} scale(${q<=0?3:lerp(3,1,back(q))})`,q>0?1:0);
+      if(p>a+.09)shake=Math.max(shake,1-prog(p,a+.09,a+.3))});
+    css(c.querySelector('.words'),`translate(${(rnd(p*91)-.5)*shake*2}cqw,${(rnd(p*53)-.5)*shake*2}cqw)`);
+    doodles(c,p,u,.38,.02); tags(c,p,.6);},
+  // 2. DROP: letters fall in one by one and bounce on their baselines
+  (p,u)=>{const c=cards[1];
+    letters(c).forEach((e,i)=>{const a=.04+i*.05, q=prog(p,a,a+.22);
+      const fall=q<.55?lerp(-70,0,(q/.55)**2):-10*Math.abs(Math.sin((q-.55)/.45*Math.PI*2))*(1-q);
+      css(e,`translateY(${(+e.dataset.y)+fall}cqw) rotate(${e.dataset.rot}deg) scaleY(${q>.5&&q<.62?.8:1})`,q>0?1:0)});
+    doodles(c,p,u,.1,.03); tags(c,p,.65);},
+  // 3. POP: each letter springs out of nothing with a spin, then they all bob
+  (p,u)=>{const c=cards[2];
+    letters(c).forEach((e,i)=>{const a=.06+i*.07, q=prog(p,a,a+.16);
+      css(e,`translateY(${(+e.dataset.y)+Math.sin(u*7+i)*.8*prog(p,.6,.75)}cqw) rotate(${lerp(-160,+e.dataset.rot,easeOut(q))}deg) scale(${back(q)})`,q>0?1:0)});
+    doodles(c,p,u,.05,.035); tags(c,p,.6);},
+  // 4. JELLY: the words squash in flat, then wobble like jelly until they settle
+  (p,u)=>{const c=cards[3], q=prog(p,.05,.3), t=prog(p,.3,1);
+    const wob=Math.sin(t*Math.PI*6)*Math.exp(-t*4)*.35;
+    css(c.querySelector('.words'),`scale(${lerp(2.2,1,easeOut(q))*(1+wob)},${lerp(.05,1,easeOut(q))*(1-wob)})`,q>0?1:0);
+    letters(c).forEach(e=>css(e,rest(e)));
+    doodles(c,p,u,.2,.025); tags(c,p,.55);},
+  // 5. ASSEMBLE: letters fly in from every direction, lock together, doodles burst out and keep dancing
+  (p,u)=>{const c=cards[4];
+    letters(c).forEach((e,i)=>{const a=.03+i*.03, q=easeOut(prog(p,a,a+.3)), ang=rnd(i+40)*Math.PI*2;
+      css(e,`translate(${Math.cos(ang)*60*(1-q)}cqw,${Math.sin(ang)*40*(1-q)+(+e.dataset.y)+Math.sin(u*5+i)*.7*prog(p,.6,.7)}cqw) rotate(${lerp(rnd(i+9)*360-180,+e.dataset.rot,q)}deg)`,q>0?1:0)});
+    doodles(c,p,u,.4,.015); tags(c,p,.62);},
 ];
 function showCard(t){
   let on=-1;
   LUCKY.forEach(([a,b],i)=>{if(t>=a&&(t<b||(i===4&&t>=b)))on=i});
   cards.forEach((c,i)=>{c.hidden=i!==on});
   $('caption').style.visibility=on<0?'visible':'hidden';
-  if(on>=0){const [a,b]=LUCKY[on]; const p=clamp((t-a)/(b-a)); CARD[on](p,(t-a)*(DUR/OLD)*3)}
+  if(on>=0){const [a,b]=LUCKY[on]; const p=clamp((t-a)/(b-a)); CARD[on](p,(t-a)*(DUR/OLD))}
   return on;
 }
 
